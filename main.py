@@ -18,7 +18,7 @@ DESCRIPTION: str = """**Movies API** helps you do awesome stuff. 🚀\n\n
  ![Movies](https://ichef.bbci.co.uk/childrens-responsive-ichef-live/r/400/1.5x/cbbc/bp-film-review-title.jpg)"""
 tags_metadata = [
     {
-        "name": "movies",
+        "name": "movie",
         "description": "Operations with movies, such as register, get, update "
                        "and delete.",
     },
