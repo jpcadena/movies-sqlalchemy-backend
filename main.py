@@ -14,7 +14,8 @@ from db.db import create_db_and_tables
 from helper.helper import update_json
 from middleware.error_handler import ErrorHandler
 
-DESCRIPTION: str = "**Movies API** helps you do awesome stuff. 🚀"
+DESCRIPTION: str = """**Movies API** helps you do awesome stuff. 🚀\n\n
+ ![Movies](https://ichef.bbci.co.uk/childrens-responsive-ichef-live/r/400/1.5x/cbbc/bp-film-review-title.jpg)"""
 tags_metadata = [
     {
         "name": "movies",
