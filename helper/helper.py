@@ -14,20 +14,23 @@ from fastapi import Depends
 from pydantic import EmailStr
 from core import config
 
-file_path: Path = Path("./openapi.json")
+settings: config.Settings = config.get_setting()
+file_path: Path = Path("." + settings.OPENAPI_FILE_PATH)
 TELEPHONE_REGEX: str = r"\(?\+[0-9]{1,3}\)? ?-?[0-9]{1,3} ?-?[0-9]{3,5}?-?" \
                        r"[0-9]{4}( ?-?[0-9]{3})? ?(\w{1,10}\s?\d{1,6})?"
 password_regex: str = r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?" \
                       r"[#?!@$%^&*-]).{8,14}$"
 
 
-async def update_json() -> None:
+async def update_json(
+        setting: config.Settings = Depends(config.get_setting)) -> None:
     """
     Generate OpenAPI JSON file
     :return: None
     :rtype: NoneType
     """
-    openapi_content: dict = json.loads(file_path.read_text(encoding='UTF-8'))
+    openapi_content: dict = json.loads(
+        file_path.read_text(encoding=setting.ENCODING))
     for key, path_data in openapi_content["paths"].items():
         if key == '/':
             continue
@@ -39,7 +42,8 @@ async def update_json() -> None:
             new_operation_id = operation_id.removeprefix(to_remove)
             operation["operationId"] = new_operation_id
     # print(json.dumps(openapi_content, indent=4))
-    file_path.write_text(json.dumps(openapi_content), encoding='UTF-8')
+    file_path.write_text(
+        json.dumps(openapi_content), encoding=setting.ENCODING)
 
 
 async def render_template(template_path: str, **kwargs) -> str:
@@ -222,7 +226,7 @@ async def send_test_email(
     :return: None
     :rtype: NoneType
     """
-    project_name = setting.project_name
+    project_name = setting.PROJECT_NAME
     subject = f"{project_name} - Test email"
     path: str = setting.EMAIL_TEMPLATES_DIR + '/' 'test_email.jinja2'
     with open(Path(setting.EMAIL_TEMPLATES_DIR) / "test_email.jinja2",
@@ -231,6 +235,6 @@ async def send_test_email(
     sent: bool = await send_email(
         [email_to], setting.SMTP_USER, setting.SMTP_USER,
         setting.SMTP_PASSWORD, subject=subject, body=template_str, path=path,
-        host=setting.SMTP_HOST, project_name=setting.project_name,
+        host=setting.SMTP_HOST, project_name=setting.PROJECT_NAME,
         email=email_to)
     return sent

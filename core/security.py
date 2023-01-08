@@ -26,10 +26,10 @@ async def create_access_token(
         expire = datetime.utcnow() + expires_delta
     else:
         expire = datetime.utcnow() + timedelta(
-            minutes=setting.access_token_expire_minutes)
+            minutes=setting.ACCESS_TOKEN_EXPIRE_MINUTES)
     payload.update({'exp': int(expire.timestamp())})
     claims: dict = jsonable_encoder(payload)
-    encoded_jwt: str = jwt.encode(claims=claims, key=setting.secret_key,
+    encoded_jwt: str = jwt.encode(claims=claims, key=setting.SECRET_KEY,
                                   algorithm=setting.ALGORITHM)
     return encoded_jwt
 
@@ -47,7 +47,7 @@ async def create_refresh_token(
     :rtype: str
     """
     expires: timedelta = timedelta(
-        seconds=setting.refresh_token_expire_seconds)
+        minutes=setting.REFRESH_TOKEN_EXPIRE_MINUTES)
     return await create_access_token(payload=payload, expires_delta=expires,
                                      setting=setting)
 
@@ -67,10 +67,10 @@ async def decode_token(
     payload: dict
     try:
         payload = jwt.decode(
-            token=token, key=setting.secret_key,
+            token=token, key=setting.SECRET_KEY,
             algorithms=[setting.ALGORITHM], options={"verify_subject": False},
-            audience=setting.base_url + '/authentication/login',
-            issuer=setting.base_url)
+            audience=setting.SERVER_HOST + '/authentication/login',
+            issuer=setting.SERVER_HOST)
         return payload
     except jwt.ExpiredSignatureError as es_exc:
         print(es_exc, ' - ', 'Token expired')

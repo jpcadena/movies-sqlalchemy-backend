@@ -11,10 +11,10 @@ from schemas.category import Category
 from schemas.movie import Movie
 from services.movie import MovieService
 
-router: APIRouter = APIRouter(prefix='/movie', tags=['movie'])
+router: APIRouter = APIRouter(prefix='/movies', tags=['movies'])
 
 
-@router.post('/movies', response_model=dict,
+@router.post('', response_model=dict,
              status_code=201)
 async def create_movie(
         movie: Movie = Body(
@@ -34,7 +34,7 @@ async def create_movie(
     return movie
 
 
-@router.get('/movies/{movie_id}', response_model=Movie)
+@router.get('/{movie_id}', response_model=Movie)
 async def get_movie(
         movie_id: PositiveInt = Path(
             ..., title='Movie ID', description='ID of the Movie to searched',
@@ -57,7 +57,7 @@ async def get_movie(
     return movie
 
 
-@router.get('/get-all-movies', response_model=list[Movie])
+@router.get('', response_model=list[Movie])
 async def get_movies(
         session: AsyncSession = Depends(get_session)) -> list[Movie]:
     """
@@ -75,7 +75,7 @@ async def get_movies(
     return movies
 
 
-@router.get('/get-movies-by-category/{category}', response_model=list[Movie])
+@router.get('/{category}/category', response_model=list[Movie])
 async def get_movies_by_category(
         category: Category = Path(
             ..., title='Category', description='Category of the Movie',
@@ -101,7 +101,7 @@ async def get_movies_by_category(
     return movies
 
 
-@router.put('/update-movie/{movie_id}', response_model=dict,
+@router.put('/{movie_id}', response_model=dict,
             status_code=200)
 async def update_movie(
         movie_id: PositiveInt = Path(
@@ -134,7 +134,7 @@ async def update_movie(
     return updated_movie
 
 
-@router.delete('/delete-movie/{movie_id}',
+@router.delete('/{movie_id}',
                status_code=status.HTTP_204_NO_CONTENT)
 async def delete_movie(
         movie_id: PositiveInt = Path(

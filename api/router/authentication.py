@@ -29,9 +29,9 @@ async def login(
     :type setting: Settings
     """
     payload: dict = {
-        "iss": setting.base_url, "sub": "username:" + user.username,
-        "aud": setting.base_url + '/authentication/login',
-        "exp": int(time.time()) + setting.access_token_expire_minutes,
+        "iss": setting.SERVER_HOST, "sub": "username:" + user.username,
+        "aud": setting.SERVER_HOST + '/authentication/login',
+        "exp": int(time.time()) + setting.ACCESS_TOKEN_EXPIRE_MINUTES,
         "nbf": int(time.time()) - 1, "iat": int(time.time()),
         "jti": uuid.uuid4(),
         "preferred_username": user.username,

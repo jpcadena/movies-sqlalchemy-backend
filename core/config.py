@@ -18,22 +18,21 @@ class Settings(BaseSettings):
         env_file: str = ".env"
         env_file_encoding: str = 'utf-8'
 
-    base_url: AnyUrl = "http://localhost:8000"
-    auth_path: AnyUrl = base_url + '/authentication/login'
-    openapi_file_path: str
-    project_name: str
-    encoding: str
-    api_v1_str: str
-    # SECRET_KEY: str = secrets.token_urlsafe(64)
-    secret_key: str
-    access_token_expire_minutes: int
+    SERVER_HOST: AnyHttpUrl
+    PROJECT_NAME: str
+    OPENAPI_FILE_PATH: str = "/openapi.json"
+    ENCODING: str = "UTF-8"
+    API_V1_STR: str = "/api/v1"
+    # SECRET_KEY: str = secrets.token_urlsafe(32)
+    SECRET_KEY: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
     # 60 minutes * 24 hours * 8 days = 8 days in minutes
-    refresh_token_expire_seconds: int
-    server_name: str
-    BACKEND_CORS_ORIGINS: list[AnyHttpUrl] = [
-        'http://localhost:3000', 'http://localhost:3001',
-        'http://localhost:3002']
-    ALGORITHM: str
+    REFRESH_TOKEN_EXPIRE_MINUTES: int
+    SERVER_NAME: str
+    BACKEND_CORS_ORIGINS: list[AnyHttpUrl] = []
+    # ["http://localhost:5000", "http://localhost:3000",
+    # "http://localhost:8080"]
+    ALGORITHM: str = "HS256"
 
     @validator("BACKEND_CORS_ORIGINS", pre=True, allow_reuse=True)
     def assemble_cors_origins(cls, v: Union[str, list[str]]) -> Union[
